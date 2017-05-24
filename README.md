@@ -8,43 +8,10 @@ In this repository we provide the source code of TX-Means, the clustering algori
 
 Please cite the paper above if you use our code or dataets.
 
-
-- Files contained in the folder:
-	README.txt
-	code/
-		__init__.py
-		test.py
-		algorithms/
-			__init__.py
-			atdc.py
-			txmeans.py
-			clope.py
-			coolcat.py
-			rock.py
-			tkmeans.py
-			util.py
-		generators/
-			__init__.py
-			ibm_generator
-			atdc_datagenerator.jar
-			datagenerator.py
-			datamanager.py
-		validation/
-			__init__.py
-			validation_measures.py
-			calculate_aggregate_statistics.py		
-	dataset/
-		mushrooms.csv
-		congress.csv
-		zoo.csv
-		sample_real_data.csv
-	
-
-- Requirements:
-
-python >= 2.7 (not python 3)
-numpy >= 1.10.1
-pandas >= 0.18.1
-scipy >= 0.17.1
-bitarray >= 0.8.1
-Java >= 8.1
+Requirements:
+- python >= 2.7 (not python 3)
+- numpy >= 1.10.1
+- pandas >= 0.18.1
+- scipy >= 0.17.1
+- bitarray >= 0.8.1
+- Java >= 8.1
