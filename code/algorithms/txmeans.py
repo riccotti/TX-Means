@@ -177,7 +177,7 @@ def cluster_variance(num_points, clusters, distances_dict_values_cl):
 def loglikelihood(num_points, num_dims, clusters, distances_dict_values_cl):
     ll = 0
     variance = cluster_variance(num_points, clusters, distances_dict_values_cl) or np.nextafter(0, 1)
-    # print 'var', variance
+    # print('var', variance)
     for cluster in clusters:
         fRn = len(cluster)
         t1 = fRn * np.log(fRn)
@@ -244,7 +244,7 @@ def bisecting_kmeans(baskets, neighbors, item_baskets, distances_dict_init, nbas
                      m0, m1, use_neighbors, min_item_freq=2, verbose=False):
 
     if verbose:
-        print '\t', datetime.datetime.now(), 'bk initial clusters assignment'
+        print('\t', datetime.datetime.now(), 'bk initial clusters assignment')
 
     cluster01, freq01, cluster01_assignment, item_baskets01 = clusters_assignment(
             baskets, item_baskets, distances_dict_init, nbaskets, nitems)
@@ -255,7 +255,7 @@ def bisecting_kmeans(baskets, neighbors, item_baskets, distances_dict_init, nbas
     if len(freq01[0]) == 0 or len(freq01[1]) == 0:
 
         if verbose:
-            print '\t', datetime.datetime.now(), 'bk the cluster cannot be split'
+            print('\t', datetime.datetime.now(), 'bk the cluster cannot be split')
 
         if len(cluster01[0]) == 0:
             m0 = m1
@@ -292,7 +292,7 @@ def bisecting_kmeans(baskets, neighbors, item_baskets, distances_dict_init, nbas
     while True:
 
         if verbose:
-            print '\t', datetime.datetime.now(), 'bk iter', count
+            print('\t', datetime.datetime.now(), 'bk iter', count)
 
         if count >= 10000:
             break
@@ -304,24 +304,24 @@ def bisecting_kmeans(baskets, neighbors, item_baskets, distances_dict_init, nbas
         if use_neighbors:
 
             if verbose:
-                print '\t', datetime.datetime.now(), 'bk calculate neighbors'
+                print('\t', datetime.datetime.now(), 'bk calculate neighbors')
 
             neighbors0, _ = calculate_neighbors(cluster01[0], item_baskets01[0], nbaskets, nitems)
             neighbors1, _ = calculate_neighbors(cluster01[1], item_baskets01[1], nbaskets, nitems)
             neighbors01 = [neighbors0, neighbors1]
 
         if verbose:
-            print '\t', datetime.datetime.now(), 'bk calculate rep m0'
+            print('\t', datetime.datetime.now(), 'bk calculate rep m0')
 
         m0_new, nbr_m0 = rep(cluster01[0], item_baskets01[0], freq01[0], nbaskets, nitems, min_item_freq)
 
         if verbose:
-            print '\t', datetime.datetime.now(), 'bk calculate rep m1'
+            print('\t', datetime.datetime.now(), 'bk calculate rep m1')
 
         m1_new, nbr_m1 = rep(cluster01[1], item_baskets01[1], freq01[1], nbaskets, nitems, min_item_freq)
 
         if verbose:
-            print '\t', datetime.datetime.now(), 'bk check convergence'
+            print('\t', datetime.datetime.now(), 'bk check convergence')
 
         if check_convergence_centroids(m0, m1, m0_new, m1_new):
             break
@@ -336,12 +336,12 @@ def bisecting_kmeans(baskets, neighbors, item_baskets, distances_dict_init, nbas
         m1 = m1_new
 
         if verbose:
-            print '\t', datetime.datetime.now(), 'bk calculate distances with centroids'
+            print('\t', datetime.datetime.now(), 'bk calculate distances with centroids')
 
         distances_dict = calculate_distances(baskets, neighbors01, m0, m1, nbr_m0, nbr_m1, use_neighbors)
 
         if verbose:
-            print '\t', datetime.datetime.now(), 'bk cluster assignments'
+            print('\t', datetime.datetime.now(), 'bk cluster assignments')
 
         cluster01_new, freq01_new, cluster01_assignment_new, item_baskets01_new = clusters_assignment(
             baskets, item_baskets, distances_dict, nbaskets, nitems)
@@ -372,7 +372,7 @@ def bisecting_kmeans(baskets, neighbors, item_baskets, distances_dict_init, nbas
         d1 = distances_dict[-2]
 
     if verbose:
-        print '\t', datetime.datetime.now(), 'bk convergence'
+        print('\t', datetime.datetime.now(), 'bk convergence')
 
     if d1 is not None:
         for b in cluster01[0]:
@@ -398,10 +398,10 @@ def bisecting_kmeans(baskets, neighbors, item_baskets, distances_dict_init, nbas
 
 def get_random_m0m1(baskets_id):
     random.seed(datetime.datetime.now())
-    m0_index = random.choice(baskets_id)
-    m1_index = random.choice(baskets_id)
+    m0_index = random.choice(list(baskets_id))
+    m1_index = random.choice(list(baskets_id))
     while m0_index == m1_index:
-        m1_index = random.choice(baskets_id)
+        m1_index = random.choice(list(baskets_id))
     return m0_index, m1_index
 
 
@@ -500,16 +500,16 @@ def calculate_initial_centroids_first_run(
                 max_no_nbr.append(no_nbr_tuple)
 
     if max_no_nbr_index == 0 or len(max_no_nbr) == len(baskets):
-        # print 'rnd'
+        # print('rnd')
         if verbose:
-            print datetime.datetime.now(), 'init random'
+            print(datetime.datetime.now(), 'init random')
 
         num_rnd_init = min(num_rnd_init, int(binom(len(baskets), 2)))
         m0_index, m1_index = random_init(baskets, neighbors, use_neighbors, num=num_rnd_init)
     else:
-        # print 'no nbr'
+        # print('no nbr')
         if verbose:
-            print datetime.datetime.now(), 'init no neighbors'
+            print(datetime.datetime.now(), 'init no neighbors')
 
         m0_index, m1_index = no_nbr_init(max_no_nbr, baskets, neighbors, use_neighbors)
 
@@ -546,7 +546,7 @@ def filter_items(baskets, item_baskets, nitems, items_in_every_basket=None):
         items_in_every_basket = nitems * bitarray('0')
 
     items_list = item_baskets.keys()
-    for item in items_list:
+    for item in list(items_list):
         if item_baskets[item].count() >= len(baskets) * 1.0:
             items_in_every_basket[item] = 1
             del item_baskets[item]
@@ -628,13 +628,13 @@ class TXmeans:
         self.stack = list()
 
         if self.verbose:
-            print datetime.datetime.now(), 'initialization'
+            print(datetime.datetime.now(), 'initialization')
         self._first_iter(baskets)
 
         while len(self.stack) > 0:
 
             if self.verbose:
-                print datetime.datetime.now(), 'iteration', self.iter_count
+                print(datetime.datetime.now(), 'iteration', self.iter_count)
 
             self.iter_count += 1
             self._iteration()
@@ -656,18 +656,18 @@ class TXmeans:
                 sample_baskets[b] = baskets[b]
             baskets = sample_baskets
             if self.verbose:
-                print datetime.datetime.now(), 'calculate item baskets'
+                print(datetime.datetime.now(), 'calculate item baskets')
             item_baskets = calculate_item_baskets(baskets, self.nbaskets)
         else:
             if self.verbose:
-                print datetime.datetime.now(), 'calculate item baskets'
+                print(datetime.datetime.now(), 'calculate item baskets')
             item_baskets = calculate_item_baskets(baskets, self.nbaskets)
 
         if self.verbose:
-            print datetime.datetime.now(), 'tot baskets', self.nbaskets, 'tot item', self.nitems
+            print(datetime.datetime.now(), 'tot baskets', self.nbaskets, 'tot item', self.nitems)
 
         if self.verbose:
-            print datetime.datetime.now(), 'filter items'
+            print(datetime.datetime.now(), 'filter items')
 
         baskets, items_in_every_basket, item_baskets, is_homogeneous = \
             filter_items(baskets, item_baskets, self.nitems)
@@ -675,7 +675,7 @@ class TXmeans:
         if is_homogeneous:
 
             if self.verbose:
-                print datetime.datetime.now(), 'the cluster is homogeneous'
+                print(datetime.datetime.now(), 'the cluster is homogeneous')
 
             cluster_out = build_cluster(baskets, self.nitems * bitarray('0'), items_in_every_basket)
             self.clustering.append(cluster_out)
@@ -687,17 +687,17 @@ class TXmeans:
         if self.use_neighbors:
 
             if self.verbose:
-                print datetime.datetime.now(), 'calculate neighbors'
+                print(datetime.datetime.now(), 'calculate neighbors')
 
             neighbors, no_neighbors = calculate_neighbors(baskets, item_baskets, self.nbaskets, self.nitems)
 
         if self.verbose:
-            print datetime.datetime.now(), 'calculate frequencies'
+            print(datetime.datetime.now(), 'calculate frequencies')
 
         freq = calculate_frequencies(item_baskets)
 
         if self.verbose:
-            print datetime.datetime.now(), 'calculate rep'
+            print(datetime.datetime.now(), 'calculate rep')
 
         baskets_rep, baskets_rep_nbr = rep(
                 baskets, item_baskets, freq, self.nbaskets, self.nitems, self.min_item_freq)
@@ -716,7 +716,7 @@ class TXmeans:
                             baskets[b], baskets_rep, nbr_b, baskets_rep_nbr, self.use_neighbors)
 
             if self.verbose:
-                print datetime.datetime.now(), 'run bisecting'
+                print(datetime.datetime.now(), 'run bisecting')
 
             clusters_split, centroids_split, distances_split = self._bisect(
                 baskets, neighbors, no_neighbors, item_baskets, dist_from_rep)
@@ -724,7 +724,7 @@ class TXmeans:
             if len(clusters_split) < 2:
 
                 if self.verbose:
-                    print datetime.datetime.now(), 'the cluster cannot be split anymore'
+                    print(datetime.datetime.now(), 'the cluster cannot be split anymore')
 
                 cluster_out = build_cluster(baskets, baskets_rep, items_in_every_basket)
                 self.clustering.append(cluster_out)
@@ -746,7 +746,7 @@ class TXmeans:
         else:
 
             if self.verbose:
-                print datetime.datetime.now(), 'calculate distances from rep'
+                print(datetime.datetime.now(), 'calculate distances from rep')
 
             distances = dict()
             for b in baskets:
@@ -757,7 +757,7 @@ class TXmeans:
                                                   self.use_neighbors)
 
             if self.verbose:
-                print datetime.datetime.now(), 'initialize stack'
+                print(datetime.datetime.now(), 'initialize stack')
 
             self.stack.append({
                 'b': baskets,
@@ -770,7 +770,7 @@ class TXmeans:
     def _bisect(self, baskets, neighbors, no_neighbors, item_baskets, dist_from_rep=None):
 
         if self.verbose:
-            print datetime.datetime.now(), 'calculate initial centroids'
+            print(datetime.datetime.now(), 'calculate initial centroids')
 
         if self.num_init_dist > 0 and dist_from_rep is not None:
             m0_index, m1_index = calculate_initial_centroids_max_dist(
@@ -792,13 +792,13 @@ class TXmeans:
             nbr_m1 = neighbors[m1_index]
 
         if self.verbose:
-            print datetime.datetime.now(), 'calculate distances from initial centroids'
+            print(datetime.datetime.now(), 'calculate distances from initial centroids')
 
         distances_dict_init = calculate_distances(
                 baskets, [neighbors, neighbors], m0, m1, nbr_m0, nbr_m1, self.use_neighbors)
 
         if self.verbose:
-            print datetime.datetime.now(), 'run bisecting kmeans'
+            print(datetime.datetime.now(), 'run bisecting kmeans')
 
         bk_res = bisecting_kmeans(baskets, neighbors, item_baskets, distances_dict_init,
                                   self.nbaskets, self.nitems, m0, m1, self.use_neighbors,
@@ -807,7 +807,7 @@ class TXmeans:
         self.iter_bk_count.append(bk_res['i'])
 
         if self.verbose:
-            print datetime.datetime.now(), 'build cluster split'
+            print(datetime.datetime.now(), 'build cluster split')
 
         clusters_split, centroids_split, distances_split = build_cluster_split(bk_res)
 
@@ -816,7 +816,7 @@ class TXmeans:
     def _iteration(self):
 
         if self.verbose:
-            print datetime.datetime.now(), 'get element from the stack'
+            print(datetime.datetime.now(), 'get element from the stack')
 
         elem = self.stack.pop()
         baskets = elem['b']
@@ -827,19 +827,19 @@ class TXmeans:
         if 'f' in elem:
 
             if self.verbose:
-                print datetime.datetime.now(), 'get precomputed item_baskets, neighbors, no_neighbors'
+                print(datetime.datetime.now(), 'get precomputed item_baskets, neighbors, no_neighbors')
 
             item_baskets, neighbors, no_neighbors = elem['f']
 
         else:
 
             if self.verbose:
-                print datetime.datetime.now(), 'calculate item baskets'
+                print(datetime.datetime.now(), 'calculate item baskets')
 
             item_baskets = calculate_item_baskets(baskets, self.nbaskets)
 
             if self.verbose:
-                print datetime.datetime.now(), 'filter items'
+                print(datetime.datetime.now(), 'filter items')
 
             baskets, items_in_every_basket, item_baskets, is_homogeneous = filter_items(
                     baskets, item_baskets, self.nitems, items_in_every_basket)
@@ -847,7 +847,7 @@ class TXmeans:
             if is_homogeneous:
 
                 if self.verbose:
-                    print datetime.datetime.now(), 'the cluster is homogeneous'
+                    print(datetime.datetime.now(), 'the cluster is homogeneous')
 
                 cluster_out = build_cluster(baskets, baskets_rep, items_in_every_basket)
                 self.clustering.append(cluster_out)
@@ -859,13 +859,13 @@ class TXmeans:
             if self.use_neighbors:
 
                 if self.verbose:
-                    print datetime.datetime.now(), 'calculate neighbors'
+                    print(datetime.datetime.now(), 'calculate neighbors')
 
                 neighbors, no_neighbors = calculate_neighbors(
                         baskets, item_baskets, self.nbaskets, self.nitems)
 
         if self.verbose:
-            print datetime.datetime.now(), 'count current baksets and items'
+            print(datetime.datetime.now(), 'count current baksets and items')
 
         ndim = 0
         for item in item_baskets:
@@ -875,15 +875,15 @@ class TXmeans:
         npoints = len(baskets)
 
         if self.verbose:
-            print datetime.datetime.now(), 'baskets', npoints, 'items', ndim
+            print(datetime.datetime.now(), 'baskets', npoints, 'items', ndim)
 
         if self.verbose:
-            print datetime.datetime.now(), 'calculate bic merge'
+            print(datetime.datetime.now(), 'calculate bic merge')
 
-        bic_merge = bic([baskets], npoints, ndim, [distances.values()])
+        bic_merge = bic([baskets], npoints, ndim, list(distances.values()))
 
         if self.verbose:
-            print datetime.datetime.now(), 'run bisecting'
+            print(datetime.datetime.now(), 'run bisecting')
 
         clusters_split, centroids_split, distances_split = self._bisect(
                 baskets, neighbors, no_neighbors, item_baskets, distances)
@@ -891,22 +891,22 @@ class TXmeans:
         if len(clusters_split) < 2:
 
             if self.verbose:
-                print datetime.datetime.now(), 'the cluster cannot be split anymore'
+                print(datetime.datetime.now(), 'the cluster cannot be split anymore')
 
             cluster_out = build_cluster(baskets, baskets_rep, items_in_every_basket)
             self.clustering.append(cluster_out)
             return
 
         if self.verbose:
-            print datetime.datetime.now(), 'calculate bic split'
+            print(datetime.datetime.now(), 'calculate bic split')
 
-        bic_split = bic(clusters_split, npoints, ndim, [distances_split[0].values(),
-                                                        distances_split[1].values()])
+        bic_split = bic(clusters_split, npoints, ndim, [list(distances_split[0].values()),
+                                                        list(distances_split[1].values())])
 
         if self.verbose:
-            print datetime.datetime.now(), 'bic merge', bic_merge, 'bic split', bic_split
+            print(datetime.datetime.now(), 'bic merge', bic_merge, 'bic split', bic_split)
 
-        # print 'merge', bic_merge, 'split', bic_split, abs(bic_split-bic_merge), \
+        # print('merge', bic_merge, 'split', bic_split, abs(bic_split-bic_merge), \)
         #     len(clusters_split[0]), len(clusters_split[1]), bic_split > bic_merge \
         #         and len(clusters_split[0]) >= self.min_cluster_size and len(clusters_split[1]) >=
         # self.min_cluster_size
@@ -916,8 +916,8 @@ class TXmeans:
                 and len(clusters_split[1]) >= self.min_cluster_size:
 
             if self.verbose:
-                print datetime.datetime.now(), 'another split is required', \
-                    len(clusters_split[0]), len(clusters_split[1])
+                print(datetime.datetime.now(), 'another split is required', \
+                    len(clusters_split[0]), len(clusters_split[1]))
 
             for cluster, centroid, distances in zip(clusters_split, centroids_split, distances_split):
 
@@ -934,18 +934,18 @@ class TXmeans:
         else:
 
             if self.verbose:
-                print datetime.datetime.now(), 'the cluster is considered enough homogeneous'
+                print(datetime.datetime.now(), 'the cluster is considered enough homogeneous')
 
             cluster_out = build_cluster(baskets, baskets_rep, items_in_every_basket)
             self.clustering.append(cluster_out)
 
         if self.verbose:
-            print ''
+            print('')
 
     def _merge_clusters(self):
 
         if self.verbose:
-            print datetime.datetime.now(), 'merge clusters'
+            print(datetime.datetime.now(), 'merge clusters')
 
         clusters_to_be_merged = defaultdict(list)
         for i, cluster in enumerate(self.clustering):
@@ -981,7 +981,7 @@ class TXmeans:
     def _assign_baskets_to_centroids(self, baskets):
 
         if self.verbose:
-            print datetime.datetime.now(), 'assign baskets to centroids'
+            print(datetime.datetime.now(), 'assign baskets to centroids')
 
         for b in baskets:
             min_dist = float('infinity')

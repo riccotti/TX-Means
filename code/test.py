@@ -1,21 +1,23 @@
+import os, sys, importlib
+sys.path.insert(0,'algorithms/') # carico la directory con i pacchetti
 from algorithms.txmeans import *
 from generators.datamanager import *
 from validation.validation_measures import *
 
 def main():
 
-    path = '.'
+    path = '../dataset/'
     dataset_name = 'mushrooms.csv'
 
     txmeans = TXmeans()
     
-    filename = path + dataset
+    filename = path + dataset_name
     class_index = 0
     skipcolumnsindex = set()
     
     baskets_real_labels, maps = read_uci_data(filename, class_index=class_index, skipcolumnsindex=skipcolumnsindex)
 
-    print dataset, len(baskets_real_labels)
+    print( dataset_name, len(baskets_real_labels))
 
     baskets_list = list()
     real_labels = list()
@@ -41,7 +43,7 @@ def main():
     running_time = end_time - start_time
 
     res = txmeans.clustering
-    iter_count = bicartd.iter_count
+    #iter_count = bicartd.iter_count
 
     pred_labels = [0] * len(real_labels)
     baskets_clusters = list()
@@ -51,10 +53,10 @@ def main():
             pred_labels[bid] = label
             baskets_clusters.append(cluster_list)
 
-    print 'delta_k', delta_k(real_labels, pred_labels)
-    print 'normalized_mutual_info_score', normalized_mutual_info_score(real_labels, pred_labels)
-    print 'purity', purity(real_labels, pred_labels)
-    print 'running_time', running_time
+    print('delta_k', delta_k(real_labels, pred_labels))
+    print('normalized_mutual_info_score', normalized_mutual_info_score(real_labels, pred_labels))
+    print('purity', purity(real_labels, pred_labels))
+    print('running_time', running_time)
     
 
 if __name__ == "__main__":
