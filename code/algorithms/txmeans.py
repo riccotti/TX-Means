@@ -594,6 +594,7 @@ class TXmeans:
     def __init__(self):
 
         self.clustering = list()
+        self.medioids = list()
         self.iter_count = 0
         self.iter_bk_count = list()
         self.stack = list()
@@ -623,6 +624,7 @@ class TXmeans:
         self.verbose = verbose
 
         self.clustering = list()
+        self.medioids = list()
         self.iter_count = 0
         self.iter_bk_count = list()
         self.stack = list()
@@ -645,7 +647,10 @@ class TXmeans:
         if self.nbaskets > self.random_sample:
             self._assign_baskets_to_centroids(baskets)
 
+        self._find_medioids()
+
         return self
+
 
     def _first_iter(self, baskets):
 
@@ -993,3 +998,15 @@ class TXmeans:
                     best_cluster = i
                     min_dist = dist
             self.clustering[best_cluster]['cluster'][b] = baskets[b]
+
+    def _find_medioids(self):
+        res = self.clustering
+        for label, cluster in enumerate(res):
+            d = np.infty
+            idx_med = 0
+            for bid, bitarr in cluster['cluster'].items():
+                d_tmp = jaccard_bitarray(bitarr, cluster['centroid'])
+                if d_tmp < d:
+                    d = d_tmp
+                    idx_med = bid
+            self.medioids.append(idx_med)
