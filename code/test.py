@@ -1,5 +1,3 @@
-import os, sys, importlib
-sys.path.insert(0,'algorithms/') # carico la directory con i pacchetti
 from algorithms.txmeans import *
 from generators.datamanager import *
 from validation.validation_measures import *

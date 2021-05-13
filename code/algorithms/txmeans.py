@@ -164,7 +164,7 @@ def free_params(num_clusters, num_dims):
 def cluster_variance(num_points, clusters, distances_dict_values_cl):
     s = 0
     den = float(num_points - len(clusters))
-    for distances_dict_values in distances_dict_values_cl:
+    for distances_dict_values in list(distances_dict_values_cl):
         distances = np.asarray(distances_dict_values)
         s += (distances*distances).sum()
 
@@ -192,7 +192,7 @@ def bic(clusters, num_points, num_dims, distances_dict_values_cl):
 
     # num_dims = min(num_points, num_dims)
 
-    log_likelihood = loglikelihood(num_points, num_dims, clusters, distances_dict_values_cl)
+    log_likelihood = loglikelihood(num_points, num_dims, clusters, list(distances_dict_values_cl))
     num_params = free_params(len(clusters), num_dims)
 
     return log_likelihood - num_params / 2.0 * np.log(num_points)
