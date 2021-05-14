@@ -9,7 +9,7 @@ In this repository we provide the source code of TX-Means, the clustering algori
 Please cite the paper above if you use our code or dataets.
 
 Requirements:
-- python >= 2.7 (not python 3)
+- python >= 3 
 - numpy >= 1.10.1
 - pandas >= 0.18.1
 - scipy >= 0.17.1
