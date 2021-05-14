@@ -397,7 +397,6 @@ def bisecting_kmeans(baskets, neighbors, item_baskets, distances_dict_init, nbas
 
 
 def get_random_m0m1(baskets_id):
-    random.seed(datetime.datetime.now())
     m0_index = random.choice(list(baskets_id))
     m1_index = random.choice(list(baskets_id))
     while m0_index == m1_index:
@@ -449,8 +448,6 @@ def no_nbr_init(max_no_nbr, baskets, neighbors, use_neighbors):
 
 
 def calculate_initial_centroids_2_furthest(baskets, verbose=False):
-
-    random.seed(datetime.datetime.now())
     m_rnd_index = random.choice(baskets.keys())
     m_rnd = baskets[m_rnd_index]
 
@@ -608,7 +605,8 @@ class TXmeans:
             force_first_split=False,
             merge_clusters=False,
             random_sample=float('infinity'),
-            verbose=False):
+            verbose=False,
+            random_state=None):
 
         self.nbaskets = nbaskets
         self.nitems = nitems
@@ -628,6 +626,9 @@ class TXmeans:
         self.iter_count = 0
         self.iter_bk_count = list()
         self.stack = list()
+
+        # For reproducibility
+        random.seed(random_state)
 
         if self.verbose:
             print(datetime.datetime.now(), 'initialization')
